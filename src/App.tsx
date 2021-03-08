@@ -1,25 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
+import { List, makeStyles } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import { Item } from './Item';
+import { SettingsGroups } from './SettingsGroup';
 
-function App() {
+
+const response = '{"groups":[{"id":1,"name":"SUPERUSER","description":"TEST","programFunctions":[{"id":1,"name":"Add new user"}]}]}';
+
+export interface Group {
+  id: number;
+  name: string;
+  description: string;
+  createdAt: number;
+  programFunctions: ProgramFunctions[]
+
+}
+
+export interface ProgramFunctions {
+  id: number;
+  name: string;
+}
+
+interface DTO {
+  groups: Group[]
+}
+
+//SetingsWindow
+const App = () => {
+
+  const [groups, setGroups] = useState<Group[]>([]);
+
+  useEffect(() => {
+    const parsed: DTO = JSON.parse(response);
+    setGroups(parsed.groups);
+  }, []);
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <SettingsGroups groups={groups} />
   );
 }
 
